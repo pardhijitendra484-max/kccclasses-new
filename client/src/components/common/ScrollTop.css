@@ -1,0 +1,9 @@
+.scroll-top {
+  position: fixed; bottom: 28px; right: 28px; z-index: 900;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--primary); color: #fff; border: none;
+  font-size: 16px; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(108,99,255,.4);
+  transition: all .25s; display: flex; align-items: center; justify-content: center;
+}
+.scroll-top:hover { background: var(--primary-dark); transform: translateY(-3px); }

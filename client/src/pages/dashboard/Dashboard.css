@@ -1,0 +1,20 @@
+/* Shared extra styles for dashboard pages */
+.me2 { margin-right: 8px; }
+.btn-dash-primary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 22px; border-radius: 10px;
+  background: #6C63FF; color: #fff; border: none;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all .2s; font-family: 'Inter', sans-serif;
+}
+.btn-dash-primary:hover:not(:disabled) { background: #5A52E0; transform: translateY(-1px); }
+.btn-dash-primary:disabled { opacity: .6; cursor: not-allowed; }
+.btn-dash-outline {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 22px; border-radius: 10px;
+  background: #fff; color: #64748B;
+  border: 1.5px solid #E2E8F0;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all .2s; font-family: 'Inter', sans-serif;
+}
+.btn-dash-outline:hover { border-color: #6C63FF; color: #6C63FF; }

@@ -38,7 +38,7 @@ async function seed() {
   console.log('║ Pass   : Teacher@123                  ║')
   console.log('╚══════════════════════════════════════╝')
   console.log('\n➡  Start: npm run dev')
-  console.log('➡  Open : http://localhost:5173\n')
+  console.log('➡  Open : http://localhost:8080\n')
   process.exit(0)
 }
 

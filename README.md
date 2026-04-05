@@ -16,7 +16,7 @@ Edit `.env` file:
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key_here
-CLIENT_URL=http://localhost:5173
+CLIENT_URL=http://localhost:8080
 ```
 
 ### 3. Seed default accounts
@@ -29,7 +29,7 @@ npm run seed
 npm run dev
 ```
 - Backend: http://localhost:5000
-- Frontend: http://localhost:5173
+- Frontend: http://localhost:8080
 
 ---
 

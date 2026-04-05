@@ -83,7 +83,7 @@ export default function Home() {
         <div className="container">
           <div className="hero-content">
             <div className="hero-badge" data-aos="fade-down">
-              <i className="fas fa-star" /> Rated #1 Coaching in Pune
+              <i className="fas fa-star" /> Rated #1 Coaching in Chandrapur
             </div>
             <h1 data-aos="fade-up" data-aos-delay="100">
               From <span className="hero-grad">9th Grade</span> to<br />

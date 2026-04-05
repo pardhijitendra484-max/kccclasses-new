@@ -285,7 +285,7 @@ export default function Home() {
             </div>
             <div className="cta-actions">
               <Link to="/register" className="btn btn-white btn-lg">Enroll Now — Free Trial <i className="fas fa-arrow-right" /></Link>
-              <a href="tel:+919876543210" className="btn btn-outline-white btn-lg">
+              <a href="tel:+919665228375" className="btn btn-outline-white btn-lg">
                 <i className="fas fa-phone-alt" /> Call Us Now
               </a>
             </div>

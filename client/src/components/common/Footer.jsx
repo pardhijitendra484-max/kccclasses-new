@@ -49,7 +49,7 @@ export default function Footer() {
               <h4>Contact</h4>
               <ul className="contact-list">
                 <li><i className="fas fa-map-marker-alt" /><span>KCC Classes, Chandrapur, Maharashtra</span></li>
-                <li><i className="fas fa-phone" /><a href="tel:+919876543210">+91 98765 43210</a></li>
+                <li><i className="fas fa-phone" /><a href="tel:+919665228375">+91  43210</a></li>
                 <li><i className="fas fa-envelope" /><a href="mailto:omendra@kccclasses.com">omendra@kccclasses.com</a></li>
                 <li><i className="fas fa-clock" /><span>Mon–Sat: 7 AM – 9 PM</span></li>
               </ul>

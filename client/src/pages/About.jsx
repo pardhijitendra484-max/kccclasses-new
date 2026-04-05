@@ -2,7 +2,7 @@ import './About.css'
 import { Link } from 'react-router-dom'
 
 const TIMELINE = [
-  { year: '2014', title: 'KCC Classes Founded', desc: 'Started with a small batch of 10 students from a humble setup in Chandrapur.' },
+  { year: '2014', title: 'KCC Classes Founded', desc: 'Started with a small batch of 10 students from a humble setup in Pune.' },
   { year: '2016', title: 'First JEE Success', desc: '3 students cleared JEE Main in the first batch — confirming the teaching methodology works.' },
   { year: '2018', title: 'Expanded to Engineering Courses', desc: 'Added BE/B.Tech semester coaching and began helping engineering college students.' },
   { year: '2020', title: 'Online Classes Launched', desc: 'Pivoted to hybrid model during the pandemic. 200+ students enrolled online.' },

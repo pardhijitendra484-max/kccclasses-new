@@ -6,6 +6,7 @@ const Homework     = require('../models/Homework')
 const Attendance   = require('../models/Attendance')
 const Test         = require('../models/Test')
 const Announcement = require('../models/Announcement')
+const { emails }   = require('../service/emailSender')
 
 const guard = [protect, requireRole('admin')]
 
@@ -43,15 +44,18 @@ router.post('/users', ...guard, async (req, res) => {
     const { name, email, password, role, course, phone, subject } = req.body
     if (!name || !email) return res.status(400).json({ status: 'FAILED', message: 'Name and email required.' })
     if (await User.findOne({ email })) return res.status(409).json({ status: 'FAILED', message: 'Email already registered.' })
+    const plainPassword = password || 'Tuition@123'
     const u = await User.create({
       name, email,
-      password: password || 'Tuition@123',
+      password: plainPassword,
       role: role || 'student',
       course: course || null,
       phone: phone || null,
       subject: subject || null
     })
-    res.status(201).json({ status: 'SUCCESS', message: 'Account created!', data: { id: u._id, name: u.name } })
+    // 📧 Send welcome email with login credentials
+    emails.welcome(email, name, role || 'student', plainPassword, { course, subject })
+    res.status(201).json({ status: 'SUCCESS', message: 'Account created! Welcome email sent.', data: { id: u._id, name: u.name } })
   } catch (e) { res.status(500).json({ status: 'FAILED', message: e.message }) }
 })
 
@@ -88,6 +92,11 @@ router.post('/fees', ...guard, async (req, res) => {
     if (!student || !month || !amount)
       return res.status(400).json({ status: 'FAILED', message: 'Student, month and amount required' })
     const fee = await Fee.create({ student, month, amount, dueDate: dueDate || null, paidAmount: 0, status: 'pending' })
+    // 📧 Notify student about new fee record
+    const studentUser = await User.findById(student)
+    if (studentUser?.email) {
+      emails.feeAdded(studentUser.email, studentUser.name, { month, amount, dueDate })
+    }
     res.status(201).json({ status: 'SUCCESS', data: fee })
   } catch (e) { res.status(500).json({ status: 'FAILED', message: e.message }) }
 })
@@ -95,7 +104,7 @@ router.post('/fees', ...guard, async (req, res) => {
 router.put('/fees/:id/collect', ...guard, async (req, res) => {
   try {
     const { paidAmount, method } = req.body
-    const fee = await Fee.findById(req.params.id)
+    const fee = await Fee.findById(req.params.id).populate('student', 'name email')
     if (!fee) return res.status(404).json({ status: 'FAILED', message: 'Fee record not found' })
     fee.paidAmount = paidAmount
     fee.method     = method || 'cash'
@@ -103,8 +112,11 @@ router.put('/fees/:id/collect', ...guard, async (req, res) => {
     fee.status     = paidAmount >= fee.amount ? 'paid' : 'partial'
     fee.receiptNo  = 'RCP' + Date.now().toString().slice(-8)
     await fee.save()
-    // Update student feeStatus
-    await User.findByIdAndUpdate(fee.student, { feeStatus: fee.status })
+    await User.findByIdAndUpdate(fee.student._id || fee.student, { feeStatus: fee.status })
+    // 📧 Send payment receipt to student
+    if (fee.student?.email) {
+      emails.feeReceipt(fee.student.email, fee.student.name, fee, fee.receiptNo)
+    }
     res.json({ status: 'SUCCESS', receiptNo: fee.receiptNo })
   } catch (e) { res.status(500).json({ status: 'FAILED', message: e.message }) }
 })
@@ -112,6 +124,32 @@ router.put('/fees/:id/collect', ...guard, async (req, res) => {
 router.delete('/fees/:id', ...guard, async (req, res) => {
   try { await Fee.findByIdAndDelete(req.params.id); res.json({ status: 'SUCCESS' }) }
   catch (e) { res.status(500).json({ status: 'FAILED', message: e.message }) }
+})
+
+// ── Fee Reminder — send bulk overdue reminders ────────────────────────────────
+router.post('/fees/send-reminders', ...guard, async (req, res) => {
+  try {
+    // Find all students with pending/overdue fees
+    const pendingFees = await Fee.find({
+      status: { $in: ['pending', 'partial', 'overdue'] }
+    }).populate('student', 'name email')
+
+    // Group by student
+    const byStudent = {}
+    for (const fee of pendingFees) {
+      if (!fee.student?.email) continue
+      const sid = fee.student._id.toString()
+      if (!byStudent[sid]) byStudent[sid] = { student: fee.student, fees: [] }
+      byStudent[sid].fees.push(fee)
+    }
+
+    let sent = 0
+    for (const { student, fees } of Object.values(byStudent)) {
+      const ok = await emails.feeReminder(student.email, student.name, fees)
+      if (ok) sent++
+    }
+    res.json({ status: 'SUCCESS', message: `Fee reminders sent to ${sent} students` })
+  } catch (e) { res.status(500).json({ status: 'FAILED', message: e.message }) }
 })
 
 // ── Teacher Attendance (Admin View) ──────────────────────────────────────────
@@ -127,7 +165,6 @@ router.get('/teacher-attendance', ...guard, async (req, res) => {
   } catch (e) { res.status(500).json({ status: 'FAILED', message: e.message }) }
 })
 
-// Admin manually mark teacher attendance
 router.post('/teacher-attendance', ...guard, async (req, res) => {
   try {
     const { teacherId, date, status } = req.body
@@ -154,7 +191,17 @@ router.post('/announcements', ...guard, async (req, res) => {
       title, message, audience: audience || 'all',
       postedBy: req.user.id, postedByName: req.user.name, postedByRole: 'admin'
     })
-    res.status(201).json({ status: 'SUCCESS', data: a })
+
+    // 📧 Send announcement email to relevant users
+    const roleFilter = audience === 'students' ? { role: 'student' }
+      : audience === 'teachers' ? { role: 'teacher' }
+      : { role: { $in: ['student', 'teacher'] } }
+    const recipients = await User.find({ ...roleFilter, isActive: true }).select('name email')
+    for (const u of recipients) {
+      emails.announcement(u.email, u.name, a, req.user.name, 'Admin')
+    }
+
+    res.status(201).json({ status: 'SUCCESS', data: a, emailsSent: recipients.length })
   } catch (e) { res.status(500).json({ status: 'FAILED', message: e.message }) }
 })
 

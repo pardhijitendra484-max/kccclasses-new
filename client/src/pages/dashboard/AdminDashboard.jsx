@@ -246,6 +246,14 @@ export default function AdminDashboard() {
   const [search,   setSearch]   = useState('')
   const [loading,  setLoading]  = useState(false)
 
+  const sendFeeReminders = async () => {
+    if (!window.confirm('Send fee reminder emails to all students with pending/overdue fees?')) return
+    try {
+      const r = await API('/admin/fees/send-reminders', 'POST')
+      toast.success(r.data.message || 'Fee reminders sent!')
+    } catch (e) { toast.error('Failed to send reminders') }
+  }
+
   const load = async () => {
     setLoading(true)
     try {
@@ -330,9 +338,10 @@ export default function AdminDashboard() {
             <div className="dash-card-body">
               <div className="qa-grid">
                 <button className="qa-btn qa-primary" onClick={() => setModal('addUser')}><i className="fas fa-user-plus"/>Add Student</button>
-                <button className="qa-btn" style={{background:'#8B5CF6',color:'#fff'}} onClick={() => { setModal('addUser') }}><i className="fas fa-chalkboard-teacher"/>Add Teacher</button>
+                <button className="qa-btn" style={{background:'#8B5CF6',color:'#fff'}} onClick={() => setModal('addUser')}><i className="fas fa-chalkboard-teacher"/>Add Teacher</button>
                 <button className="qa-btn qa-success" onClick={() => setModal('addFee')}><i className="fas fa-rupee-sign"/>Add Fee Record</button>
                 <button className="qa-btn qa-warning" onClick={() => setModal('ann')}><i className="fas fa-bullhorn"/>Post Announcement</button>
+                <button className="qa-btn" style={{background:'#EF4444',color:'#fff'}} onClick={sendFeeReminders}><i className="fas fa-envelope-open-text"/>Send Fee Reminders</button>
               </div>
             </div>
           </div>

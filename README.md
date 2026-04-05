@@ -1,35 +1,42 @@
 # KCC Classes — Full Stack School Management System
 
-A complete tuition/classes management website with Admin, Teacher, and Student dashboards.
+## 🚀 Deploy on Railway (Fix for "Cannot GET /")
 
-## 🚀 Quick Start
+### The Problem
+Railway runs `npm start` but never builds the React frontend.
+The fix: configure Railway to run `npm run build` first.
 
-### 1. Install dependencies
-```bash
-npm install
-npm install --prefix client
-```
+---
 
-### 2. Configure environment
-Edit `.env` file:
-```
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key_here
-CLIENT_URL=http://localhost:8080
-```
+### ✅ Step-by-Step Railway Deployment
 
-### 3. Seed default accounts
-```bash
-npm run seed
-```
+#### Step 1 — Push your code to GitHub
+Make sure all these files exist in your repo root:
+- `railway.toml` ✅ (included)
+- `package.json` with `build` and `start` scripts ✅
+- `server/server.js` ✅
 
-### 4. Run in development
-```bash
-npm run dev
+#### Step 2 — Set Environment Variables in Railway
+Go to your Railway project → **Variables** tab and add:
+
+| Variable     | Value                                      |
+|--------------|--------------------------------------------|
+| `NODE_ENV`   | `production`                               |
+| `MONGO_URI`  | your MongoDB connection string             |
+| `JWT_SECRET` | any long random string (min 32 chars)      |
+| `PORT`       | `5000` (Railway sets this automatically)   |
+
+#### Step 3 — Set Build & Start Commands in Railway
+In Railway → your service → **Settings** tab:
+- **Build Command:** `npm install && npm run build`
+- **Start Command:** `npm start`
+
+#### Step 4 — Redeploy
+Click **Deploy** and watch the build logs. You should see:
 ```
-- Backend: http://localhost:5000
-- Frontend: http://localhost:8080
+✅ Serving React build from client/dist
+🚀 KCC Server running on port 5000
+```
 
 ---
 
@@ -39,57 +46,51 @@ npm run dev
 |---------|---------------------------|---------------|
 | Admin   | admin@kccclasses.com      | Admin@123     |
 | Teacher | omendra@kccclasses.com    | Teacher@123   |
-| Student | (add via admin panel)     | Tuition@123   |
+
+Run `npm run seed` once after first deployment to create these accounts.
+
+---
+
+## 💻 Local Development
+
+```bash
+# Install all dependencies
+npm install
+npm install --prefix client
+
+# Seed database
+npm run seed
+
+# Run both backend + frontend
+npm run dev
+```
+
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:5000
 
 ---
 
 ## 📋 Features
 
 ### Admin Dashboard
-- **Overview** — Stats: students count, teachers count, fee collected, fee pending
-- **Students tab** — Add, edit, delete students; search by name/email
-- **Teachers tab** — Add, edit, delete teachers with subject info
-- **Fees tab** — Add fee records, collect payments (cash/UPI/bank/cheque), auto receipt generation
-- **Homework tab** — View all homework assigned by teachers
-- **Teacher Attendance tab** — View all attendance records marked by teachers with present/absent/late breakdown
-- **Notices tab** — Post announcements to all / students only / teachers only
+- Students management (add/edit/delete/search)
+- Teachers management
+- Fee management with payment collection (cash/UPI/bank/cheque)
+- View all homework assigned by teachers
+- Teacher attendance records
+- Post announcements
 
 ### Teacher Dashboard
-- **Dashboard** — Overview stats + quick actions
-- **Homework** — Assign homework with subject, due date, priority; view submissions
-- **Attendance** — Mark daily student attendance (present/absent/late); history with rates
-- **Tests** — Create tests; enter marks for each student; auto grade calculation (A+/A/B+/B/C/D/F)
-- **My Students** — Full student list with course and fee status
-- **Notices** — Post and manage announcements
+- Assign homework with due dates and priorities
+- Mark daily attendance (present/absent/late) — saved to MongoDB
+- Create tests and enter student marks (auto grade A+→F)
+- View all students
+- Post announcements
 
 ### Student Dashboard
-- **Homework** — See all assigned homework; submit with notes; view submission status and grades
-- **My Fees** — View fee records, payment history, receipts
-- **Results** — View test results and grades across all tests
-- **Attendance** — View personal attendance history, present/absent/late with percentage
-- **Notices** — View announcements from teachers and admin
-
----
-
-## 🗄 Database Models
-
-| Model        | Purpose                              |
-|-------------|--------------------------------------|
-| User         | Students, teachers, admins           |
-| Fee          | Fee records per student per month    |
-| Homework     | Assignments with submissions         |
-| Attendance   | Daily attendance records             |
-| Test         | Tests with per-student results       |
-| Announcement | Notices from teachers/admin          |
-| Contact      | Contact form submissions             |
-
----
-
-## 🛠 Tech Stack
-
-- **Frontend:** React 18, React Router v6, Axios, React-Toastify, AOS
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB + Mongoose
-- **Auth:** JWT + HTTP-only cookies
-- **Styling:** Custom CSS (no UI library dependency)
+- View and submit homework
+- View personal attendance history with percentage
+- View test results and grades
+- View fee records and payment history
+- Read announcements from teachers/admin
 

@@ -42,7 +42,7 @@ export default function Contact() {
               <h3>Contact Information</h3>
               <p>Reach out to us through any channel below and we'll get back to you as soon as possible.</p>
               <div className="info-items">
-                <div className="info-item"><div className="info-icon"><i className="fas fa-map-marker-alt" /></div><div><strong>Visit Us</strong><span>KCC Classes, Chandrapur, Maharashtra, India</span></div></div>
+                <div className="info-item"><div className="info-icon"><i className="fas fa-map-marker-alt" /></div><div><strong>Visit Us</strong><span>KCC Classes, Pune, Maharashtra, India</span></div></div>
                 <div className="info-item"><div className="info-icon"><i className="fas fa-phone-alt" /></div><div><strong>Call Us</strong><a href="tel:+919876543210">+91 98765 43210</a></div></div>
                 <div className="info-item"><div className="info-icon"><i className="fas fa-envelope" /></div><div><strong>Email Us</strong><a href="mailto:omendra@kccclasses.com">omendra@kccclasses.com</a></div></div>
                 <div className="info-item"><div className="info-icon"><i className="fas fa-clock" /></div><div><strong>Timings</strong><span>Mon–Sat: 7:00 AM – 9:00 PM<br/>Sunday: 9:00 AM – 1:00 PM</span></div></div>
@@ -52,7 +52,7 @@ export default function Contact() {
                 <a href="#" className="s-btn"><i className="fab fa-instagram" />Instagram</a>
                 <a href="#" className="s-btn"><i className="fab fa-youtube" />YouTube</a>
               </div>
-              <div className="map-box"><i className="fas fa-map-marked-alt" /><span>Chandrapur, Maharashtra</span></div>
+              <div className="map-box"><i className="fas fa-map-marked-alt" /><span>Pune, Maharashtra</span></div>
             </div>
 
             {/* Form Side */}

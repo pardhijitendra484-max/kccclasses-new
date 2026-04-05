@@ -81,7 +81,7 @@ export default function Courses() {
               { icon: 'fas fa-comments',        txt: 'Unlimited Doubt Sessions' },
               { icon: 'fas fa-chart-bar',       txt: 'Performance Analytics' },
               { icon: 'fas fa-users',           txt: 'Small Batch (Max 20)' },
-              // { icon: 'fas fa-video',           txt: 'Recorded Lectures Access' },
+              { icon: 'fas fa-video',           txt: 'Recorded Lectures Access' },
             ].map((b, i) => (
               <div key={i} className="benefit-chip">
                 <i className={b.icon} />{b.txt}

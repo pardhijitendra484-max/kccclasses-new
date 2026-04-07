@@ -44,5 +44,5 @@ if (fs.existsSync(indexFile)) {
   console.warn('⚠️  client/dist/index.html not found — run: npm run build')
 }
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 8080
 app.listen(PORT, () => console.log(`\n🚀 KCC Server running on port ${PORT}\n`))
